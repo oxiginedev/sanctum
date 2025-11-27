@@ -145,8 +145,10 @@ class Guard
             return false;
         }
 
+        $lastActivity = $accessToken->last_used_at ?? $accessToken->updated_at;
+
         $isValid =
-            (! $this->expiration || $accessToken->created_at->gt(now()->subMinutes($this->expiration)))
+            (! $this->expiration || $lastActivity->gt(now()->subMinutes($this->expiration)))
             && (! $accessToken->expires_at || ! $accessToken->expires_at->isPast())
             && $this->hasValidProvider($accessToken->tokenable);
 
